@@ -19,23 +19,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   7 .comment      00000059  00000000  00000000  000209ee  2**0
                   CONTENTS, READONLY
-  8 .debug_info   0002513c  00000000  00000000  00020a47  2**0
+  8 .debug_info   0002513b  00000000  00000000  00020a47  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_abbrev 00004f8a  00000000  00000000  00045b83  2**0
+  9 .debug_abbrev 00004f7b  00000000  00000000  00045b82  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000b065  00000000  00000000  0004ab0d  2**0
+ 10 .debug_loc    0000b070  00000000  00000000  0004aafd  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_aranges 00001078  00000000  00000000  00055b72  2**0
+ 11 .debug_aranges 00001078  00000000  00000000  00055b6d  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000011c0  00000000  00000000  00056bea  2**0
+ 12 .debug_ranges 000011c0  00000000  00000000  00056be5  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_macro  0002585b  00000000  00000000  00057daa  2**0
+ 13 .debug_macro  0002585b  00000000  00000000  00057da5  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_line   000162cc  00000000  00000000  0007d605  2**0
+ 14 .debug_line   000162cc  00000000  00000000  0007d600  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_str    00096342  00000000  00000000  000938d1  2**0
+ 15 .debug_str    00096342  00000000  00000000  000938cc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_frame  00003b00  00000000  00000000  00129c14  2**2
+ 16 .debug_frame  00003afc  00000000  00000000  00129c10  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -3060,7 +3060,7 @@ static inline void cpu_irq_restore(irqflags_t flags)
   40119c:	2040000a 	.word	0x2040000a
   4011a0:	e000ed88 	.word	0xe000ed88
   4011a4:	00403a01 	.word	0x00403a01
-  4011a8:	00403551 	.word	0x00403551
+  4011a8:	00403579 	.word	0x00403579
 
 004011ac <SystemCoreClockUpdate>:
 }
@@ -7956,7 +7956,7 @@ extern void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTa
   4032de:	4798      	blx	r3
   4032e0:	e7fe      	b.n	4032e0 <vApplicationStackOverflowHook+0xc>
   4032e2:	bf00      	nop
-  4032e4:	00409020 	.word	0x00409020
+  4032e4:	0040901c 	.word	0x0040901c
   4032e8:	004041b9 	.word	0x004041b9
 
 004032ec <vApplicationTickHook>:
@@ -8054,480 +8054,481 @@ int generate_random_coins() {
 
 004033a8 <task_coins>:
 static void task_coins(void *pvParameters) {
-  4033a8:	b580      	push	{r7, lr}
-  4033aa:	b082      	sub	sp, #8
+  4033a8:	b5f0      	push	{r4, r5, r6, r7, lr}
+  4033aa:	b083      	sub	sp, #12
+	int seed = rtt_read_timer_value(RTT);
+  4033ac:	4813      	ldr	r0, [pc, #76]	; (4033fc <task_coins+0x54>)
+  4033ae:	4b14      	ldr	r3, [pc, #80]	; (403400 <task_coins+0x58>)
+  4033b0:	4798      	blx	r3
+  4033b2:	4604      	mov	r4, r0
+	printf("Seed: %d\n",seed);
+  4033b4:	4601      	mov	r1, r0
+  4033b6:	4813      	ldr	r0, [pc, #76]	; (403404 <task_coins+0x5c>)
+  4033b8:	4b13      	ldr	r3, [pc, #76]	; (403408 <task_coins+0x60>)
+  4033ba:	4798      	blx	r3
+	srand(seed);
+  4033bc:	4620      	mov	r0, r4
+  4033be:	4b13      	ldr	r3, [pc, #76]	; (40340c <task_coins+0x64>)
+  4033c0:	4798      	blx	r3
 		if (xSemaphoreTake(xBtnSemaphore, portMAX_DELAY)) { // Espera o botão ser pressionado
-  4033ac:	4e0d      	ldr	r6, [pc, #52]	; (4033e4 <task_coins+0x3c>)
-  4033ae:	2400      	movs	r4, #0
-  4033b0:	4d0d      	ldr	r5, [pc, #52]	; (4033e8 <task_coins+0x40>)
-  4033b2:	4623      	mov	r3, r4
-  4033b4:	f04f 32ff 	mov.w	r2, #4294967295
-  4033b8:	4621      	mov	r1, r4
-  4033ba:	6830      	ldr	r0, [r6, #0]
-  4033bc:	47a8      	blx	r5
-  4033be:	2800      	cmp	r0, #0
-  4033c0:	d0f7      	beq.n	4033b2 <task_coins+0xa>
+  4033c2:	4e13      	ldr	r6, [pc, #76]	; (403410 <task_coins+0x68>)
+  4033c4:	2400      	movs	r4, #0
+  4033c6:	4d13      	ldr	r5, [pc, #76]	; (403414 <task_coins+0x6c>)
+  4033c8:	4623      	mov	r3, r4
+  4033ca:	f04f 32ff 	mov.w	r2, #4294967295
+  4033ce:	4621      	mov	r1, r4
+  4033d0:	6830      	ldr	r0, [r6, #0]
+  4033d2:	47a8      	blx	r5
+  4033d4:	2800      	cmp	r0, #0
+  4033d6:	d0f7      	beq.n	4033c8 <task_coins+0x20>
 			coin_count = generate_random_coins(); // Gera um valor aleatório entre 1 e 3
-  4033c2:	4b0a      	ldr	r3, [pc, #40]	; (4033ec <task_coins+0x44>)
-  4033c4:	4798      	blx	r3
-  4033c6:	a902      	add	r1, sp, #8
-  4033c8:	f841 0d04 	str.w	r0, [r1, #-4]!
+  4033d8:	4b0f      	ldr	r3, [pc, #60]	; (403418 <task_coins+0x70>)
+  4033da:	4798      	blx	r3
+  4033dc:	a902      	add	r1, sp, #8
+  4033de:	f841 0d04 	str.w	r0, [r1, #-4]!
 			xQueueSend(xQueueCoins, &coin_count, portMAX_DELAY); // Envia valor para a fila
-  4033cc:	4623      	mov	r3, r4
-  4033ce:	f04f 32ff 	mov.w	r2, #4294967295
-  4033d2:	4807      	ldr	r0, [pc, #28]	; (4033f0 <task_coins+0x48>)
-  4033d4:	6800      	ldr	r0, [r0, #0]
-  4033d6:	4f07      	ldr	r7, [pc, #28]	; (4033f4 <task_coins+0x4c>)
-  4033d8:	47b8      	blx	r7
+  4033e2:	4623      	mov	r3, r4
+  4033e4:	f04f 32ff 	mov.w	r2, #4294967295
+  4033e8:	480c      	ldr	r0, [pc, #48]	; (40341c <task_coins+0x74>)
+  4033ea:	6800      	ldr	r0, [r0, #0]
+  4033ec:	4f0c      	ldr	r7, [pc, #48]	; (403420 <task_coins+0x78>)
+  4033ee:	47b8      	blx	r7
 			printf("Coins: %d\n", coin_count);
-  4033da:	9901      	ldr	r1, [sp, #4]
-  4033dc:	4806      	ldr	r0, [pc, #24]	; (4033f8 <task_coins+0x50>)
-  4033de:	4b07      	ldr	r3, [pc, #28]	; (4033fc <task_coins+0x54>)
-  4033e0:	4798      	blx	r3
-  4033e2:	e7e6      	b.n	4033b2 <task_coins+0xa>
-  4033e4:	20400e20 	.word	0x20400e20
-  4033e8:	00401e41 	.word	0x00401e41
-  4033ec:	00403385 	.word	0x00403385
-  4033f0:	20400e1c 	.word	0x20400e1c
-  4033f4:	00401a7d 	.word	0x00401a7d
-  4033f8:	00409014 	.word	0x00409014
-  4033fc:	004041b9 	.word	0x004041b9
+  4033f0:	9901      	ldr	r1, [sp, #4]
+  4033f2:	480c      	ldr	r0, [pc, #48]	; (403424 <task_coins+0x7c>)
+  4033f4:	4b04      	ldr	r3, [pc, #16]	; (403408 <task_coins+0x60>)
+  4033f6:	4798      	blx	r3
+  4033f8:	e7e6      	b.n	4033c8 <task_coins+0x20>
+  4033fa:	bf00      	nop
+  4033fc:	400e1830 	.word	0x400e1830
+  403400:	004001ad 	.word	0x004001ad
+  403404:	00409004 	.word	0x00409004
+  403408:	004041b9 	.word	0x004041b9
+  40340c:	0040428d 	.word	0x0040428d
+  403410:	20400e20 	.word	0x20400e20
+  403414:	00401e41 	.word	0x00401e41
+  403418:	00403385 	.word	0x00403385
+  40341c:	20400e1c 	.word	0x20400e1c
+  403420:	00401a7d 	.word	0x00401a7d
+  403424:	00409010 	.word	0x00409010
 
-00403400 <play_tone>:
+00403428 <play_tone>:
 void play_tone(int freq, int duration) {
-  403400:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+  403428:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
 	int pulse_duration_us = 1000000 / freq;
-  403402:	4d0c      	ldr	r5, [pc, #48]	; (403434 <play_tone+0x34>)
-  403404:	fb95 f0f0 	sdiv	r0, r5, r0
+  40342a:	4d0c      	ldr	r5, [pc, #48]	; (40345c <play_tone+0x34>)
+  40342c:	fb95 f0f0 	sdiv	r0, r5, r0
 	int half_period_us = pulse_duration_us / 2;
-  403408:	4606      	mov	r6, r0
-  40340a:	2800      	cmp	r0, #0
-  40340c:	bfb8      	it	lt
-  40340e:	1c46      	addlt	r6, r0, #1
-  403410:	1076      	asrs	r6, r6, #1
+  403430:	4606      	mov	r6, r0
+  403432:	2800      	cmp	r0, #0
+  403434:	bfb8      	it	lt
+  403436:	1c46      	addlt	r6, r0, #1
+  403438:	1076      	asrs	r6, r6, #1
 	int num_periods = duration * 1000 / pulse_duration_us;
-  403412:	f44f 757a 	mov.w	r5, #1000	; 0x3e8
-  403416:	fb05 f501 	mul.w	r5, r5, r1
-  40341a:	fb95 f5f0 	sdiv	r5, r5, r0
+  40343a:	f44f 757a 	mov.w	r5, #1000	; 0x3e8
+  40343e:	fb05 f501 	mul.w	r5, r5, r1
+  403442:	fb95 f5f0 	sdiv	r5, r5, r0
 	for (int i = 0; i < num_periods; i++) {
-  40341e:	2d00      	cmp	r5, #0
-  403420:	dd06      	ble.n	403430 <play_tone+0x30>
-  403422:	2400      	movs	r4, #0
+  403446:	2d00      	cmp	r5, #0
+  403448:	dd06      	ble.n	403458 <play_tone+0x30>
+  40344a:	2400      	movs	r4, #0
 		buzzer_pulse(half_period_us);
-  403424:	4f04      	ldr	r7, [pc, #16]	; (403438 <play_tone+0x38>)
-  403426:	4630      	mov	r0, r6
-  403428:	47b8      	blx	r7
+  40344c:	4f04      	ldr	r7, [pc, #16]	; (403460 <play_tone+0x38>)
+  40344e:	4630      	mov	r0, r6
+  403450:	47b8      	blx	r7
 	for (int i = 0; i < num_periods; i++) {
-  40342a:	3401      	adds	r4, #1
-  40342c:	42a5      	cmp	r5, r4
-  40342e:	d1fa      	bne.n	403426 <play_tone+0x26>
-  403430:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
-  403432:	bf00      	nop
-  403434:	000f4240 	.word	0x000f4240
-  403438:	00403305 	.word	0x00403305
+  403452:	3401      	adds	r4, #1
+  403454:	42a5      	cmp	r5, r4
+  403456:	d1fa      	bne.n	40344e <play_tone+0x26>
+  403458:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+  40345a:	bf00      	nop
+  40345c:	000f4240 	.word	0x000f4240
+  403460:	00403305 	.word	0x00403305
 
-0040343c <play_coins>:
+00403464 <play_coins>:
 void play_coins(int coin_count) {
-  40343c:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+  403464:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
 	for (int i = 0; i < coin_count; i++) {
-  403440:	1e06      	subs	r6, r0, #0
-  403442:	dd12      	ble.n	40346a <play_coins+0x2e>
-  403444:	2400      	movs	r4, #0
+  403468:	1e06      	subs	r6, r0, #0
+  40346a:	dd12      	ble.n	403492 <play_coins+0x2e>
+  40346c:	2400      	movs	r4, #0
 		play_tone(NOTE_B5, 80);
-  403446:	f04f 0850 	mov.w	r8, #80	; 0x50
-  40344a:	4d09      	ldr	r5, [pc, #36]	; (403470 <play_coins+0x34>)
+  40346e:	f04f 0850 	mov.w	r8, #80	; 0x50
+  403472:	4d09      	ldr	r5, [pc, #36]	; (403498 <play_coins+0x34>)
 		vTaskDelay(100);
-  40344c:	4f09      	ldr	r7, [pc, #36]	; (403474 <play_coins+0x38>)
+  403474:	4f09      	ldr	r7, [pc, #36]	; (40349c <play_coins+0x38>)
 		play_tone(NOTE_B5, 80);
-  40344e:	4641      	mov	r1, r8
-  403450:	f44f 7077 	mov.w	r0, #988	; 0x3dc
-  403454:	47a8      	blx	r5
+  403476:	4641      	mov	r1, r8
+  403478:	f44f 7077 	mov.w	r0, #988	; 0x3dc
+  40347c:	47a8      	blx	r5
 		play_tone(NOTE_E6, 640);
-  403456:	f44f 7120 	mov.w	r1, #640	; 0x280
-  40345a:	f240 5027 	movw	r0, #1319	; 0x527
-  40345e:	47a8      	blx	r5
+  40347e:	f44f 7120 	mov.w	r1, #640	; 0x280
+  403482:	f240 5027 	movw	r0, #1319	; 0x527
+  403486:	47a8      	blx	r5
 		vTaskDelay(100);
-  403460:	2064      	movs	r0, #100	; 0x64
-  403462:	47b8      	blx	r7
+  403488:	2064      	movs	r0, #100	; 0x64
+  40348a:	47b8      	blx	r7
 	for (int i = 0; i < coin_count; i++) {
-  403464:	3401      	adds	r4, #1
-  403466:	42a6      	cmp	r6, r4
-  403468:	d1f1      	bne.n	40344e <play_coins+0x12>
-  40346a:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
-  40346e:	bf00      	nop
-  403470:	00403401 	.word	0x00403401
-  403474:	00402669 	.word	0x00402669
+  40348c:	3401      	adds	r4, #1
+  40348e:	42a6      	cmp	r6, r4
+  403490:	d1f1      	bne.n	403476 <play_coins+0x12>
+  403492:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+  403496:	bf00      	nop
+  403498:	00403429 	.word	0x00403429
+  40349c:	00402669 	.word	0x00402669
 
-00403478 <task_play>:
+004034a0 <task_play>:
 static void task_play(void *pvParameters) {
-  403478:	b500      	push	{lr}
-  40347a:	b083      	sub	sp, #12
+  4034a0:	b500      	push	{lr}
+  4034a2:	b083      	sub	sp, #12
 		if (xQueueReceive(xQueueCoins, &coins_to_play, portMAX_DELAY)) {
-  40347c:	4d06      	ldr	r5, [pc, #24]	; (403498 <task_play+0x20>)
-  40347e:	4c07      	ldr	r4, [pc, #28]	; (40349c <task_play+0x24>)
+  4034a4:	4d06      	ldr	r5, [pc, #24]	; (4034c0 <task_play+0x20>)
+  4034a6:	4c07      	ldr	r4, [pc, #28]	; (4034c4 <task_play+0x24>)
 			play_coins(coins_to_play);
-  403480:	4e07      	ldr	r6, [pc, #28]	; (4034a0 <task_play+0x28>)
+  4034a8:	4e07      	ldr	r6, [pc, #28]	; (4034c8 <task_play+0x28>)
 		if (xQueueReceive(xQueueCoins, &coins_to_play, portMAX_DELAY)) {
-  403482:	2300      	movs	r3, #0
-  403484:	f04f 32ff 	mov.w	r2, #4294967295
-  403488:	a901      	add	r1, sp, #4
-  40348a:	6828      	ldr	r0, [r5, #0]
-  40348c:	47a0      	blx	r4
-  40348e:	2800      	cmp	r0, #0
-  403490:	d0f7      	beq.n	403482 <task_play+0xa>
+  4034aa:	2300      	movs	r3, #0
+  4034ac:	f04f 32ff 	mov.w	r2, #4294967295
+  4034b0:	a901      	add	r1, sp, #4
+  4034b2:	6828      	ldr	r0, [r5, #0]
+  4034b4:	47a0      	blx	r4
+  4034b6:	2800      	cmp	r0, #0
+  4034b8:	d0f7      	beq.n	4034aa <task_play+0xa>
 			play_coins(coins_to_play);
-  403492:	9801      	ldr	r0, [sp, #4]
-  403494:	47b0      	blx	r6
-  403496:	e7f4      	b.n	403482 <task_play+0xa>
-  403498:	20400e1c 	.word	0x20400e1c
-  40349c:	00401e41 	.word	0x00401e41
-  4034a0:	0040343d 	.word	0x0040343d
+  4034ba:	9801      	ldr	r0, [sp, #4]
+  4034bc:	47b0      	blx	r6
+  4034be:	e7f4      	b.n	4034aa <task_play+0xa>
+  4034c0:	20400e1c 	.word	0x20400e1c
+  4034c4:	00401e41 	.word	0x00401e41
+  4034c8:	00403465 	.word	0x00403465
 
-004034a4 <btn_init>:
+004034cc <btn_init>:
 
 /************************************************************************/
 /* funcoes                                                              */
 /************************************************************************/
 
 void btn_init(void) {
-  4034a4:	b530      	push	{r4, r5, lr}
-  4034a6:	b083      	sub	sp, #12
+  4034cc:	b530      	push	{r4, r5, lr}
+  4034ce:	b083      	sub	sp, #12
 	// Inicializa clock do periférico PIO responsavel pelo botao
 	pmc_enable_periph_clk(BTN_PIO_ID);
-  4034a8:	200a      	movs	r0, #10
-  4034aa:	4b15      	ldr	r3, [pc, #84]	; (403500 <btn_init+0x5c>)
-  4034ac:	4798      	blx	r3
+  4034d0:	200a      	movs	r0, #10
+  4034d2:	4b15      	ldr	r3, [pc, #84]	; (403528 <btn_init+0x5c>)
+  4034d4:	4798      	blx	r3
 
 	// Configura PIO para lidar com o pino do botão como entrada
 	// com pull-up
 	pio_configure(BTN_PIO, PIO_INPUT, BTN_PIO_PIN_MASK, PIO_PULLUP | PIO_DEBOUNCE);
-  4034ae:	4c15      	ldr	r4, [pc, #84]	; (403504 <btn_init+0x60>)
-  4034b0:	2309      	movs	r3, #9
-  4034b2:	f44f 6200 	mov.w	r2, #2048	; 0x800
-  4034b6:	f04f 5120 	mov.w	r1, #671088640	; 0x28000000
-  4034ba:	4620      	mov	r0, r4
-  4034bc:	4d12      	ldr	r5, [pc, #72]	; (403508 <btn_init+0x64>)
-  4034be:	47a8      	blx	r5
+  4034d6:	4c15      	ldr	r4, [pc, #84]	; (40352c <btn_init+0x60>)
+  4034d8:	2309      	movs	r3, #9
+  4034da:	f44f 6200 	mov.w	r2, #2048	; 0x800
+  4034de:	f04f 5120 	mov.w	r1, #671088640	; 0x28000000
+  4034e2:	4620      	mov	r0, r4
+  4034e4:	4d12      	ldr	r5, [pc, #72]	; (403530 <btn_init+0x64>)
+  4034e6:	47a8      	blx	r5
 	pio_set_debounce_filter(BTN_PIO, BTN_PIO_PIN_MASK, 60);
-  4034c0:	223c      	movs	r2, #60	; 0x3c
-  4034c2:	f44f 6100 	mov.w	r1, #2048	; 0x800
-  4034c6:	4620      	mov	r0, r4
-  4034c8:	4b10      	ldr	r3, [pc, #64]	; (40350c <btn_init+0x68>)
-  4034ca:	4798      	blx	r3
+  4034e8:	223c      	movs	r2, #60	; 0x3c
+  4034ea:	f44f 6100 	mov.w	r1, #2048	; 0x800
+  4034ee:	4620      	mov	r0, r4
+  4034f0:	4b10      	ldr	r3, [pc, #64]	; (403534 <btn_init+0x68>)
+  4034f2:	4798      	blx	r3
 	
 	// Configura interrupção no pino referente ao botao e associa
 	// função de callback caso uma interrupção for gerada
 	// a função de callback é a: but_callback()
 	pio_handler_set(BTN_PIO,
-  4034cc:	4b10      	ldr	r3, [pc, #64]	; (403510 <btn_init+0x6c>)
-  4034ce:	9300      	str	r3, [sp, #0]
-  4034d0:	2350      	movs	r3, #80	; 0x50
-  4034d2:	f44f 6200 	mov.w	r2, #2048	; 0x800
-  4034d6:	210a      	movs	r1, #10
-  4034d8:	4620      	mov	r0, r4
-  4034da:	4d0e      	ldr	r5, [pc, #56]	; (403514 <btn_init+0x70>)
-  4034dc:	47a8      	blx	r5
+  4034f4:	4b10      	ldr	r3, [pc, #64]	; (403538 <btn_init+0x6c>)
+  4034f6:	9300      	str	r3, [sp, #0]
+  4034f8:	2350      	movs	r3, #80	; 0x50
+  4034fa:	f44f 6200 	mov.w	r2, #2048	; 0x800
+  4034fe:	210a      	movs	r1, #10
+  403500:	4620      	mov	r0, r4
+  403502:	4d0e      	ldr	r5, [pc, #56]	; (40353c <btn_init+0x70>)
+  403504:	47a8      	blx	r5
 	BTN_PIO_PIN_MASK,
 	PIO_IT_FALL_EDGE,
 	but_callback);
 
 	// Ativa interrupção e limpa primeira IRQ gerada na ativacao
 	pio_enable_interrupt(BTN_PIO, BTN_PIO_PIN_MASK);
-  4034de:	f44f 6100 	mov.w	r1, #2048	; 0x800
-  4034e2:	4620      	mov	r0, r4
-  4034e4:	4b0c      	ldr	r3, [pc, #48]	; (403518 <btn_init+0x74>)
-  4034e6:	4798      	blx	r3
+  403506:	f44f 6100 	mov.w	r1, #2048	; 0x800
+  40350a:	4620      	mov	r0, r4
+  40350c:	4b0c      	ldr	r3, [pc, #48]	; (403540 <btn_init+0x74>)
+  40350e:	4798      	blx	r3
 	pio_get_interrupt_status(BTN_PIO);
-  4034e8:	4620      	mov	r0, r4
-  4034ea:	4b0c      	ldr	r3, [pc, #48]	; (40351c <btn_init+0x78>)
-  4034ec:	4798      	blx	r3
+  403510:	4620      	mov	r0, r4
+  403512:	4b0c      	ldr	r3, [pc, #48]	; (403544 <btn_init+0x78>)
+  403514:	4798      	blx	r3
   NVIC->ISER[(uint32_t)((int32_t)IRQn) >> 5] = (uint32_t)(1 << ((uint32_t)((int32_t)IRQn) & (uint32_t)0x1F)); /* enable interrupt */
-  4034ee:	4b0c      	ldr	r3, [pc, #48]	; (403520 <btn_init+0x7c>)
-  4034f0:	f44f 6280 	mov.w	r2, #1024	; 0x400
-  4034f4:	601a      	str	r2, [r3, #0]
+  403516:	4b0c      	ldr	r3, [pc, #48]	; (403548 <btn_init+0x7c>)
+  403518:	f44f 6280 	mov.w	r2, #1024	; 0x400
+  40351c:	601a      	str	r2, [r3, #0]
     NVIC->IP[(uint32_t)(IRQn)]            = ((priority << (8 - __NVIC_PRIO_BITS)) & 0xff); } /* set Priority for device specific Interrupts  */
-  4034f6:	2280      	movs	r2, #128	; 0x80
-  4034f8:	f883 230a 	strb.w	r2, [r3, #778]	; 0x30a
+  40351e:	2280      	movs	r2, #128	; 0x80
+  403520:	f883 230a 	strb.w	r2, [r3, #778]	; 0x30a
 
 	// Configura NVIC para receber interrupcoes do PIO do botao
 	// com prioridade 4 (quanto mais próximo de 0 maior)
 	NVIC_EnableIRQ(BTN_PIO_ID);
 	NVIC_SetPriority(BTN_PIO_ID, 4); // Prioridade 4
 }
-  4034fc:	b003      	add	sp, #12
-  4034fe:	bd30      	pop	{r4, r5, pc}
-  403500:	00400f59 	.word	0x00400f59
-  403504:	400e0e00 	.word	0x400e0e00
-  403508:	00400c45 	.word	0x00400c45
-  40350c:	00400b31 	.word	0x00400b31
-  403510:	004030c9 	.word	0x004030c9
-  403514:	00400d65 	.word	0x00400d65
-  403518:	00400d07 	.word	0x00400d07
-  40351c:	00400d0b 	.word	0x00400d0b
-  403520:	e000e100 	.word	0xe000e100
+  403524:	b003      	add	sp, #12
+  403526:	bd30      	pop	{r4, r5, pc}
+  403528:	00400f59 	.word	0x00400f59
+  40352c:	400e0e00 	.word	0x400e0e00
+  403530:	00400c45 	.word	0x00400c45
+  403534:	00400b31 	.word	0x00400b31
+  403538:	004030c9 	.word	0x004030c9
+  40353c:	00400d65 	.word	0x00400d65
+  403540:	00400d07 	.word	0x00400d07
+  403544:	00400d0b 	.word	0x00400d0b
+  403548:	e000e100 	.word	0xe000e100
 
-00403524 <buzzer_init>:
+0040354c <buzzer_init>:
 
 void buzzer_init(void) {
-  403524:	b510      	push	{r4, lr}
-  403526:	b082      	sub	sp, #8
+  40354c:	b510      	push	{r4, lr}
+  40354e:	b082      	sub	sp, #8
 	// Ativa o PIO na qual o BUZZER está conectado
 	pmc_enable_periph_clk(BUZZER_PIO_ID);
-  403528:	200a      	movs	r0, #10
-  40352a:	4b06      	ldr	r3, [pc, #24]	; (403544 <buzzer_init+0x20>)
-  40352c:	4798      	blx	r3
+  403550:	200a      	movs	r0, #10
+  403552:	4b06      	ldr	r3, [pc, #24]	; (40356c <buzzer_init+0x20>)
+  403554:	4798      	blx	r3
 	// Configura o PIO para controlar o BUZZER como saída
 	pio_set_output(BUZZER_PIO, BUZZER_PIO_IDX_MASK, 0, 0, 0);
-  40352e:	2200      	movs	r2, #0
-  403530:	9200      	str	r2, [sp, #0]
-  403532:	4613      	mov	r3, r2
-  403534:	f04f 6100 	mov.w	r1, #134217728	; 0x8000000
-  403538:	4803      	ldr	r0, [pc, #12]	; (403548 <buzzer_init+0x24>)
-  40353a:	4c04      	ldr	r4, [pc, #16]	; (40354c <buzzer_init+0x28>)
-  40353c:	47a0      	blx	r4
+  403556:	2200      	movs	r2, #0
+  403558:	9200      	str	r2, [sp, #0]
+  40355a:	4613      	mov	r3, r2
+  40355c:	f04f 6100 	mov.w	r1, #134217728	; 0x8000000
+  403560:	4803      	ldr	r0, [pc, #12]	; (403570 <buzzer_init+0x24>)
+  403562:	4c04      	ldr	r4, [pc, #16]	; (403574 <buzzer_init+0x28>)
+  403564:	47a0      	blx	r4
 }
-  40353e:	b002      	add	sp, #8
-  403540:	bd10      	pop	{r4, pc}
-  403542:	bf00      	nop
-  403544:	00400f59 	.word	0x00400f59
-  403548:	400e0e00 	.word	0x400e0e00
-  40354c:	00400c1b 	.word	0x00400c1b
+  403566:	b002      	add	sp, #8
+  403568:	bd10      	pop	{r4, pc}
+  40356a:	bf00      	nop
+  40356c:	00400f59 	.word	0x00400f59
+  403570:	400e0e00 	.word	0x400e0e00
+  403574:	00400c1b 	.word	0x00400c1b
 
-00403550 <main>:
+00403578 <main>:
 /************************************************************************/
 /* main                                                                 */
 /************************************************************************/
 
 
 int main(void) {
-  403550:	b570      	push	{r4, r5, r6, lr}
-  403552:	b08a      	sub	sp, #40	; 0x28
+  403578:	b500      	push	{lr}
+  40357a:	b08b      	sub	sp, #44	; 0x2c
 	/* Initialize the SAM system */
 	sysclk_init();
-  403554:	4b41      	ldr	r3, [pc, #260]	; (40365c <main+0x10c>)
-  403556:	4798      	blx	r3
+  40357c:	4b3c      	ldr	r3, [pc, #240]	; (403670 <main+0xf8>)
+  40357e:	4798      	blx	r3
 	board_init();
-  403558:	4b41      	ldr	r3, [pc, #260]	; (403660 <main+0x110>)
-  40355a:	4798      	blx	r3
+  403580:	4b3c      	ldr	r3, [pc, #240]	; (403674 <main+0xfc>)
+  403582:	4798      	blx	r3
  * \param opt         Options needed to set up RS232 communication (see \ref usart_options_t).
  *
  */
 static inline void stdio_serial_init(volatile void *usart, const usart_serial_options_t *opt)
 {
 	stdio_base = (void *)usart;
-  40355c:	4d41      	ldr	r5, [pc, #260]	; (403664 <main+0x114>)
-  40355e:	4b42      	ldr	r3, [pc, #264]	; (403668 <main+0x118>)
-  403560:	601d      	str	r5, [r3, #0]
+  403584:	4d3c      	ldr	r5, [pc, #240]	; (403678 <main+0x100>)
+  403586:	4b3d      	ldr	r3, [pc, #244]	; (40367c <main+0x104>)
+  403588:	601d      	str	r5, [r3, #0]
 	ptr_put = (int (*)(void volatile*,char))&usart_serial_putchar;
-  403562:	4a42      	ldr	r2, [pc, #264]	; (40366c <main+0x11c>)
-  403564:	4b42      	ldr	r3, [pc, #264]	; (403670 <main+0x120>)
-  403566:	601a      	str	r2, [r3, #0]
+  40358a:	4a3d      	ldr	r2, [pc, #244]	; (403680 <main+0x108>)
+  40358c:	4b3d      	ldr	r3, [pc, #244]	; (403684 <main+0x10c>)
+  40358e:	601a      	str	r2, [r3, #0]
 	ptr_get = (void (*)(void volatile*,char*))&usart_serial_getchar;
-  403568:	4a42      	ldr	r2, [pc, #264]	; (403674 <main+0x124>)
-  40356a:	4b43      	ldr	r3, [pc, #268]	; (403678 <main+0x128>)
-  40356c:	601a      	str	r2, [r3, #0]
+  403590:	4a3d      	ldr	r2, [pc, #244]	; (403688 <main+0x110>)
+  403592:	4b3e      	ldr	r3, [pc, #248]	; (40368c <main+0x114>)
+  403594:	601a      	str	r2, [r3, #0]
 	usart_settings.baudrate = opt->baudrate;
-  40356e:	f44f 33e1 	mov.w	r3, #115200	; 0x1c200
-  403572:	9304      	str	r3, [sp, #16]
+  403596:	f44f 33e1 	mov.w	r3, #115200	; 0x1c200
+  40359a:	9304      	str	r3, [sp, #16]
 	usart_settings.char_length = opt->charlength;
-  403574:	23c0      	movs	r3, #192	; 0xc0
-  403576:	9305      	str	r3, [sp, #20]
+  40359c:	23c0      	movs	r3, #192	; 0xc0
+  40359e:	9305      	str	r3, [sp, #20]
 	usart_settings.parity_type = opt->paritytype;
-  403578:	f44f 6300 	mov.w	r3, #2048	; 0x800
-  40357c:	9306      	str	r3, [sp, #24]
+  4035a0:	f44f 6300 	mov.w	r3, #2048	; 0x800
+  4035a4:	9306      	str	r3, [sp, #24]
 	usart_settings.stop_bits= opt->stopbits;
-  40357e:	2400      	movs	r4, #0
-  403580:	9407      	str	r4, [sp, #28]
+  4035a6:	2400      	movs	r4, #0
+  4035a8:	9407      	str	r4, [sp, #28]
 	usart_settings.channel_mode= US_MR_CHMODE_NORMAL;
-  403582:	9408      	str	r4, [sp, #32]
-  403584:	200e      	movs	r0, #14
-  403586:	4b3d      	ldr	r3, [pc, #244]	; (40367c <main+0x12c>)
-  403588:	4798      	blx	r3
+  4035aa:	9408      	str	r4, [sp, #32]
+  4035ac:	200e      	movs	r0, #14
+  4035ae:	4b38      	ldr	r3, [pc, #224]	; (403690 <main+0x118>)
+  4035b0:	4798      	blx	r3
 		usart_init_rs232(p_usart, &usart_settings,
-  40358a:	4a3d      	ldr	r2, [pc, #244]	; (403680 <main+0x130>)
-  40358c:	a904      	add	r1, sp, #16
-  40358e:	4628      	mov	r0, r5
-  403590:	4b3c      	ldr	r3, [pc, #240]	; (403684 <main+0x134>)
-  403592:	4798      	blx	r3
+  4035b2:	4a38      	ldr	r2, [pc, #224]	; (403694 <main+0x11c>)
+  4035b4:	a904      	add	r1, sp, #16
+  4035b6:	4628      	mov	r0, r5
+  4035b8:	4b37      	ldr	r3, [pc, #220]	; (403698 <main+0x120>)
+  4035ba:	4798      	blx	r3
 		usart_enable_tx(p_usart);
-  403594:	4628      	mov	r0, r5
-  403596:	4b3c      	ldr	r3, [pc, #240]	; (403688 <main+0x138>)
-  403598:	4798      	blx	r3
+  4035bc:	4628      	mov	r0, r5
+  4035be:	4b37      	ldr	r3, [pc, #220]	; (40369c <main+0x124>)
+  4035c0:	4798      	blx	r3
 		usart_enable_rx(p_usart);
-  40359a:	4628      	mov	r0, r5
-  40359c:	4b3b      	ldr	r3, [pc, #236]	; (40368c <main+0x13c>)
-  40359e:	4798      	blx	r3
+  4035c2:	4628      	mov	r0, r5
+  4035c4:	4b36      	ldr	r3, [pc, #216]	; (4036a0 <main+0x128>)
+  4035c6:	4798      	blx	r3
 	fdevopen((int (*)(char, FILE*))(_write),(int (*)(FILE*))(_read));
 #  endif
 #  if UC3 || SAM
 	// For AVR32 and SAM GCC
 	// Specify that stdout and stdin should not be buffered.
 	setbuf(stdout, NULL);
-  4035a0:	4e3b      	ldr	r6, [pc, #236]	; (403690 <main+0x140>)
-  4035a2:	6833      	ldr	r3, [r6, #0]
-  4035a4:	4621      	mov	r1, r4
-  4035a6:	6898      	ldr	r0, [r3, #8]
-  4035a8:	4d3a      	ldr	r5, [pc, #232]	; (403694 <main+0x144>)
-  4035aa:	47a8      	blx	r5
+  4035c8:	4e36      	ldr	r6, [pc, #216]	; (4036a4 <main+0x12c>)
+  4035ca:	6833      	ldr	r3, [r6, #0]
+  4035cc:	4621      	mov	r1, r4
+  4035ce:	6898      	ldr	r0, [r3, #8]
+  4035d0:	4d35      	ldr	r5, [pc, #212]	; (4036a8 <main+0x130>)
+  4035d2:	47a8      	blx	r5
 	setbuf(stdin, NULL);
-  4035ac:	6833      	ldr	r3, [r6, #0]
-  4035ae:	4621      	mov	r1, r4
-  4035b0:	6858      	ldr	r0, [r3, #4]
-  4035b2:	47a8      	blx	r5
+  4035d4:	6833      	ldr	r3, [r6, #0]
+  4035d6:	4621      	mov	r1, r4
+  4035d8:	6858      	ldr	r0, [r3, #4]
+  4035da:	47a8      	blx	r5
 	setbuf(stdout, NULL);
-  4035b4:	6833      	ldr	r3, [r6, #0]
-  4035b6:	4621      	mov	r1, r4
-  4035b8:	6898      	ldr	r0, [r3, #8]
-  4035ba:	47a8      	blx	r5
-
-	/* Initialize the console uart */
-	configure_console();
+  4035dc:	6833      	ldr	r3, [r6, #0]
+  4035de:	4621      	mov	r1, r4
+  4035e0:	6898      	ldr	r0, [r3, #8]
+  4035e2:	47a8      	blx	r5
 	
-	uint32_t seed = rtt_read_timer_value(RTT);
-  4035bc:	4836      	ldr	r0, [pc, #216]	; (403698 <main+0x148>)
-  4035be:	4b37      	ldr	r3, [pc, #220]	; (40369c <main+0x14c>)
-  4035c0:	4798      	blx	r3
-  4035c2:	4605      	mov	r5, r0
-	srand(seed);
-  4035c4:	4b36      	ldr	r3, [pc, #216]	; (4036a0 <main+0x150>)
-  4035c6:	4798      	blx	r3
-	printf("Meu Seed: %d\n", seed);
-  4035c8:	4629      	mov	r1, r5
-  4035ca:	4836      	ldr	r0, [pc, #216]	; (4036a4 <main+0x154>)
-  4035cc:	4b36      	ldr	r3, [pc, #216]	; (4036a8 <main+0x158>)
-  4035ce:	4798      	blx	r3
 	
+	
+	
+	 
 	btn_init();
-  4035d0:	4b36      	ldr	r3, [pc, #216]	; (4036ac <main+0x15c>)
-  4035d2:	4798      	blx	r3
+  4035e4:	4b31      	ldr	r3, [pc, #196]	; (4036ac <main+0x134>)
+  4035e6:	4798      	blx	r3
 	buzzer_init();
-  4035d4:	4b36      	ldr	r3, [pc, #216]	; (4036b0 <main+0x160>)
-  4035d6:	4798      	blx	r3
+  4035e8:	4b31      	ldr	r3, [pc, #196]	; (4036b0 <main+0x138>)
+  4035ea:	4798      	blx	r3
 	
 	//Fila
 	xQueueCoins = xQueueCreate(10, sizeof(int)); 
-  4035d8:	4622      	mov	r2, r4
-  4035da:	2104      	movs	r1, #4
-  4035dc:	200a      	movs	r0, #10
-  4035de:	4d35      	ldr	r5, [pc, #212]	; (4036b4 <main+0x164>)
-  4035e0:	47a8      	blx	r5
-  4035e2:	4b35      	ldr	r3, [pc, #212]	; (4036b8 <main+0x168>)
-  4035e4:	6018      	str	r0, [r3, #0]
+  4035ec:	4622      	mov	r2, r4
+  4035ee:	2104      	movs	r1, #4
+  4035f0:	200a      	movs	r0, #10
+  4035f2:	4d30      	ldr	r5, [pc, #192]	; (4036b4 <main+0x13c>)
+  4035f4:	47a8      	blx	r5
+  4035f6:	4b30      	ldr	r3, [pc, #192]	; (4036b8 <main+0x140>)
+  4035f8:	6018      	str	r0, [r3, #0]
 	//semafaro
 	xBtnSemaphore = xSemaphoreCreateBinary(); 
-  4035e6:	2203      	movs	r2, #3
-  4035e8:	4621      	mov	r1, r4
-  4035ea:	2001      	movs	r0, #1
-  4035ec:	47a8      	blx	r5
-  4035ee:	4b33      	ldr	r3, [pc, #204]	; (4036bc <main+0x16c>)
-  4035f0:	6018      	str	r0, [r3, #0]
+  4035fa:	2203      	movs	r2, #3
+  4035fc:	4621      	mov	r1, r4
+  4035fe:	2001      	movs	r0, #1
+  403600:	47a8      	blx	r5
+  403602:	4b2e      	ldr	r3, [pc, #184]	; (4036bc <main+0x144>)
+  403604:	6018      	str	r0, [r3, #0]
 	
 	if (xTaskCreate(task_debug, "debug", TASK_OLED_STACK_SIZE, NULL,
-  4035f2:	9403      	str	r4, [sp, #12]
-  4035f4:	9402      	str	r4, [sp, #8]
-  4035f6:	9401      	str	r4, [sp, #4]
-  4035f8:	9400      	str	r4, [sp, #0]
-  4035fa:	4623      	mov	r3, r4
-  4035fc:	f44f 62c0 	mov.w	r2, #1536	; 0x600
-  403600:	492f      	ldr	r1, [pc, #188]	; (4036c0 <main+0x170>)
-  403602:	4830      	ldr	r0, [pc, #192]	; (4036c4 <main+0x174>)
-  403604:	4c30      	ldr	r4, [pc, #192]	; (4036c8 <main+0x178>)
-  403606:	47a0      	blx	r4
-  403608:	2801      	cmp	r0, #1
-  40360a:	d002      	beq.n	403612 <main+0xc2>
+  403606:	9403      	str	r4, [sp, #12]
+  403608:	9402      	str	r4, [sp, #8]
+  40360a:	9401      	str	r4, [sp, #4]
+  40360c:	9400      	str	r4, [sp, #0]
+  40360e:	4623      	mov	r3, r4
+  403610:	f44f 62c0 	mov.w	r2, #1536	; 0x600
+  403614:	492a      	ldr	r1, [pc, #168]	; (4036c0 <main+0x148>)
+  403616:	482b      	ldr	r0, [pc, #172]	; (4036c4 <main+0x14c>)
+  403618:	4c2b      	ldr	r4, [pc, #172]	; (4036c8 <main+0x150>)
+  40361a:	47a0      	blx	r4
+  40361c:	2801      	cmp	r0, #1
+  40361e:	d002      	beq.n	403626 <main+0xae>
 	TASK_OLED_STACK_PRIORITY, NULL) != pdPASS) 
 	{
 		printf("Failed to create debug task\r\n");
-  40360c:	482f      	ldr	r0, [pc, #188]	; (4036cc <main+0x17c>)
-  40360e:	4b30      	ldr	r3, [pc, #192]	; (4036d0 <main+0x180>)
-  403610:	4798      	blx	r3
+  403620:	482a      	ldr	r0, [pc, #168]	; (4036cc <main+0x154>)
+  403622:	4b2b      	ldr	r3, [pc, #172]	; (4036d0 <main+0x158>)
+  403624:	4798      	blx	r3
 	}
 
 	if (xTaskCreate(task_coins, "task_coins", 1024, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) 
-  403612:	2300      	movs	r3, #0
-  403614:	9303      	str	r3, [sp, #12]
-  403616:	9302      	str	r3, [sp, #8]
-  403618:	9301      	str	r3, [sp, #4]
-  40361a:	9300      	str	r3, [sp, #0]
-  40361c:	f44f 6280 	mov.w	r2, #1024	; 0x400
-  403620:	492c      	ldr	r1, [pc, #176]	; (4036d4 <main+0x184>)
-  403622:	482d      	ldr	r0, [pc, #180]	; (4036d8 <main+0x188>)
-  403624:	4c28      	ldr	r4, [pc, #160]	; (4036c8 <main+0x178>)
-  403626:	47a0      	blx	r4
-  403628:	2801      	cmp	r0, #1
-  40362a:	d002      	beq.n	403632 <main+0xe2>
+  403626:	2300      	movs	r3, #0
+  403628:	9303      	str	r3, [sp, #12]
+  40362a:	9302      	str	r3, [sp, #8]
+  40362c:	9301      	str	r3, [sp, #4]
+  40362e:	9300      	str	r3, [sp, #0]
+  403630:	f44f 6280 	mov.w	r2, #1024	; 0x400
+  403634:	4927      	ldr	r1, [pc, #156]	; (4036d4 <main+0x15c>)
+  403636:	4828      	ldr	r0, [pc, #160]	; (4036d8 <main+0x160>)
+  403638:	4c23      	ldr	r4, [pc, #140]	; (4036c8 <main+0x150>)
+  40363a:	47a0      	blx	r4
+  40363c:	2801      	cmp	r0, #1
+  40363e:	d002      	beq.n	403646 <main+0xce>
 	{
 		printf("Failed to create task_coins\r\n");
-  40362c:	482b      	ldr	r0, [pc, #172]	; (4036dc <main+0x18c>)
-  40362e:	4b28      	ldr	r3, [pc, #160]	; (4036d0 <main+0x180>)
-  403630:	4798      	blx	r3
+  403640:	4826      	ldr	r0, [pc, #152]	; (4036dc <main+0x164>)
+  403642:	4b23      	ldr	r3, [pc, #140]	; (4036d0 <main+0x158>)
+  403644:	4798      	blx	r3
 	}
 
 	if (xTaskCreate(task_play, "task_play", 1024, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) 
-  403632:	2300      	movs	r3, #0
-  403634:	9303      	str	r3, [sp, #12]
-  403636:	9302      	str	r3, [sp, #8]
-  403638:	9301      	str	r3, [sp, #4]
-  40363a:	2201      	movs	r2, #1
-  40363c:	9200      	str	r2, [sp, #0]
-  40363e:	f44f 6280 	mov.w	r2, #1024	; 0x400
-  403642:	4927      	ldr	r1, [pc, #156]	; (4036e0 <main+0x190>)
-  403644:	4827      	ldr	r0, [pc, #156]	; (4036e4 <main+0x194>)
-  403646:	4c20      	ldr	r4, [pc, #128]	; (4036c8 <main+0x178>)
-  403648:	47a0      	blx	r4
-  40364a:	2801      	cmp	r0, #1
-  40364c:	d002      	beq.n	403654 <main+0x104>
+  403646:	2300      	movs	r3, #0
+  403648:	9303      	str	r3, [sp, #12]
+  40364a:	9302      	str	r3, [sp, #8]
+  40364c:	9301      	str	r3, [sp, #4]
+  40364e:	2201      	movs	r2, #1
+  403650:	9200      	str	r2, [sp, #0]
+  403652:	f44f 6280 	mov.w	r2, #1024	; 0x400
+  403656:	4922      	ldr	r1, [pc, #136]	; (4036e0 <main+0x168>)
+  403658:	4822      	ldr	r0, [pc, #136]	; (4036e4 <main+0x16c>)
+  40365a:	4c1b      	ldr	r4, [pc, #108]	; (4036c8 <main+0x150>)
+  40365c:	47a0      	blx	r4
+  40365e:	2801      	cmp	r0, #1
+  403660:	d002      	beq.n	403668 <main+0xf0>
 	{
 		printf("Failed to create task_play\r\n");
-  40364e:	4826      	ldr	r0, [pc, #152]	; (4036e8 <main+0x198>)
-  403650:	4b1f      	ldr	r3, [pc, #124]	; (4036d0 <main+0x180>)
-  403652:	4798      	blx	r3
+  403662:	4821      	ldr	r0, [pc, #132]	; (4036e8 <main+0x170>)
+  403664:	4b1a      	ldr	r3, [pc, #104]	; (4036d0 <main+0x158>)
+  403666:	4798      	blx	r3
 	}
 	
 
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
-  403654:	4b25      	ldr	r3, [pc, #148]	; (4036ec <main+0x19c>)
-  403656:	4798      	blx	r3
-  403658:	e7fe      	b.n	403658 <main+0x108>
-  40365a:	bf00      	nop
-  40365c:	0040089d 	.word	0x0040089d
-  403660:	00400999 	.word	0x00400999
-  403664:	40028000 	.word	0x40028000
-  403668:	20400dd8 	.word	0x20400dd8
-  40366c:	00403201 	.word	0x00403201
-  403670:	20400dd4 	.word	0x20400dd4
-  403674:	00403125 	.word	0x00403125
-  403678:	20400dd0 	.word	0x20400dd0
-  40367c:	00400f59 	.word	0x00400f59
-  403680:	08f0d180 	.word	0x08f0d180
-  403684:	00401055 	.word	0x00401055
-  403688:	004010a9 	.word	0x004010a9
-  40368c:	004010af 	.word	0x004010af
-  403690:	20400014 	.word	0x20400014
-  403694:	00404305 	.word	0x00404305
-  403698:	400e1830 	.word	0x400e1830
-  40369c:	004001ad 	.word	0x004001ad
-  4036a0:	0040428d 	.word	0x0040428d
-  4036a4:	00408f88 	.word	0x00408f88
-  4036a8:	004041b9 	.word	0x004041b9
-  4036ac:	004034a5 	.word	0x004034a5
-  4036b0:	00403525 	.word	0x00403525
+  403668:	4b20      	ldr	r3, [pc, #128]	; (4036ec <main+0x174>)
+  40366a:	4798      	blx	r3
+  40366c:	e7fe      	b.n	40366c <main+0xf4>
+  40366e:	bf00      	nop
+  403670:	0040089d 	.word	0x0040089d
+  403674:	00400999 	.word	0x00400999
+  403678:	40028000 	.word	0x40028000
+  40367c:	20400dd8 	.word	0x20400dd8
+  403680:	00403201 	.word	0x00403201
+  403684:	20400dd4 	.word	0x20400dd4
+  403688:	00403125 	.word	0x00403125
+  40368c:	20400dd0 	.word	0x20400dd0
+  403690:	00400f59 	.word	0x00400f59
+  403694:	08f0d180 	.word	0x08f0d180
+  403698:	00401055 	.word	0x00401055
+  40369c:	004010a9 	.word	0x004010a9
+  4036a0:	004010af 	.word	0x004010af
+  4036a4:	20400014 	.word	0x20400014
+  4036a8:	00404305 	.word	0x00404305
+  4036ac:	004034cd 	.word	0x004034cd
+  4036b0:	0040354d 	.word	0x0040354d
   4036b4:	00401a01 	.word	0x00401a01
   4036b8:	20400e1c 	.word	0x20400e1c
   4036bc:	20400e20 	.word	0x20400e20
-  4036c0:	00408f98 	.word	0x00408f98
+  4036c0:	00408f88 	.word	0x00408f88
   4036c4:	004030e1 	.word	0x004030e1
   4036c8:	00402121 	.word	0x00402121
-  4036cc:	00408fa0 	.word	0x00408fa0
+  4036cc:	00408f90 	.word	0x00408f90
   4036d0:	0040427d 	.word	0x0040427d
-  4036d4:	00408fc0 	.word	0x00408fc0
+  4036d4:	00408fb0 	.word	0x00408fb0
   4036d8:	004033a9 	.word	0x004033a9
-  4036dc:	00408fcc 	.word	0x00408fcc
-  4036e0:	00408fec 	.word	0x00408fec
-  4036e4:	00403479 	.word	0x00403479
-  4036e8:	00408ff8 	.word	0x00408ff8
+  4036dc:	00408fbc 	.word	0x00408fbc
+  4036e0:	00408fdc 	.word	0x00408fdc
+  4036e4:	004034a1 	.word	0x004034a1
+  4036e8:	00408fe8 	.word	0x00408fe8
   4036ec:	00402355 	.word	0x00402355
 
 004036f0 <__aeabi_uldivmod>:
@@ -9627,7 +9628,7 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
   404270:	f9b4 300c 	ldrsh.w	r3, [r4, #12]
   404274:	b29a      	uxth	r2, r3
   404276:	e7d2      	b.n	40421e <_puts_r+0x3e>
-  404278:	00408f94 	.word	0x00408f94
+  404278:	0040900c 	.word	0x0040900c
 
 0040427c <puts>:
   40427c:	4b02      	ldr	r3, [pc, #8]	; (404288 <puts+0xc>)
@@ -10444,9 +10445,9 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
   404b3a:	f04b 0b20 	orr.w	fp, fp, #32
   404b3e:	f899 6000 	ldrb.w	r6, [r9]
   404b42:	e5aa      	b.n	40469a <_vfprintf_r+0xfe>
-  404b44:	00409080 	.word	0x00409080
-  404b48:	00409090 	.word	0x00409090
-  404b4c:	00409060 	.word	0x00409060
+  404b44:	0040907c 	.word	0x0040907c
+  404b48:	0040908c 	.word	0x0040908c
+  404b4c:	0040905c 	.word	0x0040905c
   404b50:	9a0e      	ldr	r2, [sp, #56]	; 0x38
   404b52:	6817      	ldr	r7, [r2, #0]
   404b54:	2400      	movs	r4, #0
@@ -10843,13 +10844,13 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
   404f7e:	9d0a      	ldr	r5, [sp, #40]	; 0x28
   404f80:	e015      	b.n	404fae <_vfprintf_r+0xa12>
   404f82:	bf00      	nop
-  404f84:	00409060 	.word	0x00409060
-  404f88:	0040904c 	.word	0x0040904c
+  404f84:	0040905c 	.word	0x0040905c
+  404f88:	00409048 	.word	0x00409048
   404f8c:	7fefffff 	.word	0x7fefffff
-  404f90:	00409040 	.word	0x00409040
-  404f94:	0040903c 	.word	0x0040903c
-  404f98:	0040907c 	.word	0x0040907c
-  404f9c:	00409090 	.word	0x00409090
+  404f90:	0040903c 	.word	0x0040903c
+  404f94:	00409038 	.word	0x00409038
+  404f98:	00409078 	.word	0x00409078
+  404f9c:	0040908c 	.word	0x0040908c
   404fa0:	f1aa 0a10 	sub.w	sl, sl, #16
   404fa4:	f1ba 0f10 	cmp.w	sl, #16
   404fa8:	f102 0208 	add.w	r2, r2, #8
@@ -11352,7 +11353,7 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
   4054ac:	f10d 08c0 	add.w	r8, sp, #192	; 0xc0
   4054b0:	e5c6      	b.n	405040 <_vfprintf_r+0xaa4>
   4054b2:	bf00      	nop
-  4054b4:	00409090 	.word	0x00409090
+  4054b4:	0040908c 	.word	0x0040908c
   4054b8:	af30      	add	r7, sp, #192	; 0xc0
   4054ba:	f7ff b999 	b.w	4047f0 <_vfprintf_r+0x254>
   4054be:	aa23      	add	r2, sp, #140	; 0x8c
@@ -11799,10 +11800,10 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
   405926:	f8dd a020 	ldr.w	sl, [sp, #32]
   40592a:	f8dd b028 	ldr.w	fp, [sp, #40]	; 0x28
   40592e:	e00c      	b.n	40594a <_vfprintf_r+0x13ae>
-  405930:	0040907c 	.word	0x0040907c
+  405930:	00409078 	.word	0x00409078
   405934:	66666667 	.word	0x66666667
-  405938:	00409074 	.word	0x00409074
-  40593c:	00409090 	.word	0x00409090
+  405938:	00409070 	.word	0x00409070
+  40593c:	0040908c 	.word	0x0040908c
   405940:	f108 0808 	add.w	r8, r8, #8
   405944:	3e10      	subs	r6, #16
   405946:	2e10      	cmp	r6, #16
@@ -11964,8 +11965,8 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
   405ae0:	f7ff b8b0 	b.w	404c44 <_vfprintf_r+0x6a8>
   405ae4:	f88d 106f 	strb.w	r1, [sp, #111]	; 0x6f
   405ae8:	f7ff b945 	b.w	404d76 <_vfprintf_r+0x7da>
-  405aec:	00409048 	.word	0x00409048
-  405af0:	00409044 	.word	0x00409044
+  405aec:	00409044 	.word	0x00409044
+  405af0:	00409040 	.word	0x00409040
 
 00405af4 <__sbprintf>:
   405af4:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
@@ -12487,12 +12488,12 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
   406028:	509f79fb 	.word	0x509f79fb
   40602c:	3fd34413 	.word	0x3fd34413
   406030:	7ff00000 	.word	0x7ff00000
-  406034:	0040907d 	.word	0x0040907d
-  406038:	004090a0 	.word	0x004090a0
-  40603c:	004090ac 	.word	0x004090ac
+  406034:	00409079 	.word	0x00409079
+  406038:	0040909c 	.word	0x0040909c
+  40603c:	004090a8 	.word	0x004090a8
   406040:	3ff80000 	.word	0x3ff80000
   406044:	004090d8 	.word	0x004090d8
-  406048:	0040907c 	.word	0x0040907c
+  406048:	00409078 	.word	0x00409078
   40604c:	40240000 	.word	0x40240000
   406050:	f002 fcb6 	bl	4089c0 <__aeabi_dmul>
   406054:	2200      	movs	r2, #0
@@ -15935,7 +15936,7 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
   4081e2:	e8bd 83f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
   4081e6:	bf00      	nop
   4081e8:	20400850 	.word	0x20400850
-  4081ec:	00409038 	.word	0x00409038
+  4081ec:	00409034 	.word	0x00409034
   4081f0:	00403a51 	.word	0x00403a51
 
 004081f4 <_calloc_r>:
@@ -17235,64 +17236,64 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
   408f7c:	00000000 	.word	0x00000000
   408f80:	20726d54 	.word	0x20726d54
   408f84:	00637653 	.word	0x00637653
-  408f88:	2075654d 	.word	0x2075654d
-  408f8c:	64656553 	.word	0x64656553
-  408f90:	6425203a 	.word	0x6425203a
-  408f94:	0000000a 	.word	0x0000000a
-  408f98:	75626564 	.word	0x75626564
-  408f9c:	00000067 	.word	0x00000067
-  408fa0:	6c696146 	.word	0x6c696146
-  408fa4:	74206465 	.word	0x74206465
-  408fa8:	7263206f 	.word	0x7263206f
-  408fac:	65746165 	.word	0x65746165
-  408fb0:	62656420 	.word	0x62656420
-  408fb4:	74206775 	.word	0x74206775
-  408fb8:	0d6b7361 	.word	0x0d6b7361
-  408fbc:	00000000 	.word	0x00000000
-  408fc0:	6b736174 	.word	0x6b736174
-  408fc4:	696f635f 	.word	0x696f635f
-  408fc8:	0000736e 	.word	0x0000736e
-  408fcc:	6c696146 	.word	0x6c696146
-  408fd0:	74206465 	.word	0x74206465
-  408fd4:	7263206f 	.word	0x7263206f
-  408fd8:	65746165 	.word	0x65746165
-  408fdc:	73617420 	.word	0x73617420
-  408fe0:	6f635f6b 	.word	0x6f635f6b
-  408fe4:	0d736e69 	.word	0x0d736e69
-  408fe8:	00000000 	.word	0x00000000
-  408fec:	6b736174 	.word	0x6b736174
-  408ff0:	616c705f 	.word	0x616c705f
-  408ff4:	00000079 	.word	0x00000079
-  408ff8:	6c696146 	.word	0x6c696146
-  408ffc:	74206465 	.word	0x74206465
-  409000:	7263206f 	.word	0x7263206f
-  409004:	65746165 	.word	0x65746165
-  409008:	73617420 	.word	0x73617420
-  40900c:	6c705f6b 	.word	0x6c705f6b
-  409010:	000d7961 	.word	0x000d7961
-  409014:	6e696f43 	.word	0x6e696f43
-  409018:	25203a73 	.word	0x25203a73
-  40901c:	00000a64 	.word	0x00000a64
-  409020:	63617473 	.word	0x63617473
-  409024:	766f206b 	.word	0x766f206b
-  409028:	6c667265 	.word	0x6c667265
-  40902c:	2520776f 	.word	0x2520776f
-  409030:	73252078 	.word	0x73252078
-  409034:	00000a0d 	.word	0x00000a0d
+  408f88:	75626564 	.word	0x75626564
+  408f8c:	00000067 	.word	0x00000067
+  408f90:	6c696146 	.word	0x6c696146
+  408f94:	74206465 	.word	0x74206465
+  408f98:	7263206f 	.word	0x7263206f
+  408f9c:	65746165 	.word	0x65746165
+  408fa0:	62656420 	.word	0x62656420
+  408fa4:	74206775 	.word	0x74206775
+  408fa8:	0d6b7361 	.word	0x0d6b7361
+  408fac:	00000000 	.word	0x00000000
+  408fb0:	6b736174 	.word	0x6b736174
+  408fb4:	696f635f 	.word	0x696f635f
+  408fb8:	0000736e 	.word	0x0000736e
+  408fbc:	6c696146 	.word	0x6c696146
+  408fc0:	74206465 	.word	0x74206465
+  408fc4:	7263206f 	.word	0x7263206f
+  408fc8:	65746165 	.word	0x65746165
+  408fcc:	73617420 	.word	0x73617420
+  408fd0:	6f635f6b 	.word	0x6f635f6b
+  408fd4:	0d736e69 	.word	0x0d736e69
+  408fd8:	00000000 	.word	0x00000000
+  408fdc:	6b736174 	.word	0x6b736174
+  408fe0:	616c705f 	.word	0x616c705f
+  408fe4:	00000079 	.word	0x00000079
+  408fe8:	6c696146 	.word	0x6c696146
+  408fec:	74206465 	.word	0x74206465
+  408ff0:	7263206f 	.word	0x7263206f
+  408ff4:	65746165 	.word	0x65746165
+  408ff8:	73617420 	.word	0x73617420
+  408ffc:	6c705f6b 	.word	0x6c705f6b
+  409000:	000d7961 	.word	0x000d7961
+  409004:	64656553 	.word	0x64656553
+  409008:	6425203a 	.word	0x6425203a
+  40900c:	0000000a 	.word	0x0000000a
+  409010:	6e696f43 	.word	0x6e696f43
+  409014:	25203a73 	.word	0x25203a73
+  409018:	00000a64 	.word	0x00000a64
+  40901c:	63617473 	.word	0x63617473
+  409020:	766f206b 	.word	0x766f206b
+  409024:	6c667265 	.word	0x6c667265
+  409028:	2520776f 	.word	0x2520776f
+  40902c:	73252078 	.word	0x73252078
+  409030:	00000a0d 	.word	0x00000a0d
 
-00409038 <_global_impure_ptr>:
-  409038:	20400018 00464e49 00666e69 004e414e     ..@ INF.inf.NAN.
-  409048:	006e616e 33323130 37363534 42413938     nan.0123456789AB
-  409058:	46454443 00000000 33323130 37363534     CDEF....01234567
-  409068:	62613938 66656463 00000000 6c756e28     89abcdef....(nul
-  409078:	0000296c 00000030                       l)..0...
+00409034 <_global_impure_ptr>:
+  409034:	20400018 00464e49 00666e69 004e414e     ..@ INF.inf.NAN.
+  409044:	006e616e 33323130 37363534 42413938     nan.0123456789AB
+  409054:	46454443 00000000 33323130 37363534     CDEF....01234567
+  409064:	62613938 66656463 00000000 6c756e28     89abcdef....(nul
+  409074:	0000296c 00000030                       l)..0...
 
-00409080 <blanks.7238>:
-  409080:	20202020 20202020 20202020 20202020                     
+0040907c <blanks.7238>:
+  40907c:	20202020 20202020 20202020 20202020                     
 
-00409090 <zeroes.7239>:
-  409090:	30303030 30303030 30303030 30303030     0000000000000000
-  4090a0:	69666e49 7974696e 00000000 004e614e     Infinity....NaN.
+0040908c <zeroes.7239>:
+  40908c:	30303030 30303030 30303030 30303030     0000000000000000
+  40909c:	69666e49 7974696e 00000000 004e614e     Infinity....NaN.
+  4090ac:	00000000                                ....
 
 004090b0 <__mprec_bigtens>:
   4090b0:	37e08000 4341c379 b5056e17 4693b8b5     ...7y.AC.n.....F
@@ -17480,9 +17481,9 @@ void portable_delay_cycles(unsigned long n)
 20400914:	0043 0000 0000 0000 0000 0000 0000 0000     C...............
 	...
 20400934:	8635 0040 84d9 0040 0000 0000 91bc 0040     5.@...@.......@.
-20400944:	91b8 0040 8fbc 0040 8fbc 0040 8fbc 0040     ..@...@...@...@.
-20400954:	8fbc 0040 8fbc 0040 8fbc 0040 8fbc 0040     ..@...@...@...@.
-20400964:	8fbc 0040 8fbc 0040 ffff ffff ffff ffff     ..@...@.........
+20400944:	91b8 0040 8fac 0040 8fac 0040 8fac 0040     ..@...@...@...@.
+20400954:	8fac 0040 8fac 0040 8fac 0040 8fac 0040     ..@...@...@...@.
+20400964:	8fac 0040 8fac 0040 ffff ffff ffff ffff     ..@...@.........
 20400974:	ffff ffff ffff 0000 0001 5341 4943 0049     ..........ASCII.
 	...
 2040099c:	0000 5341 4943 0049 0000 0000 0000 0000     ..ASCII.........

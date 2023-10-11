@@ -96,9 +96,14 @@ void buzzer_pulse(int pulse_duration_us) {
 /* TASKS                                                                */
 /************************************************************************/
 
+
+
 static void task_coins(void *pvParameters) {
+	int seed = rtt_read_timer_value(RTT);
+	printf("Seed: %d\n",seed);
+	srand(seed);
+
 	int coin_count;
-	
 
 	while (1) {
 		if (xSemaphoreTake(xBtnSemaphore, portMAX_DELAY)) { // Espera o botão ser pressionado
@@ -255,10 +260,10 @@ int main(void) {
 	/* Initialize the console uart */
 	configure_console();
 	
-	uint32_t seed = rtt_read_timer_value(RTT);
-	srand(seed);
-	printf("Meu Seed: %d\n", seed);
 	
+	
+	
+	 
 	btn_init();
 	buzzer_init();
 	
