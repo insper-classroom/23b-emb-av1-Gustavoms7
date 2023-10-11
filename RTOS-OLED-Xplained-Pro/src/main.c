@@ -32,6 +32,8 @@
 /************************************************************************/
 /* prototypes and types                                                 */
 /************************************************************************/
+QueueHandle_t xQueueCoins;
+SemaphoreHandle_t xBtnSemaphore;
 
 int generate_random_coins(void);
 void btn_init(void);
@@ -42,8 +44,7 @@ void play_coins(int coin_count);
 /* rtos vars                                                            */
 /************************************************************************/
 
-QueueHandle_t xQueueCoins;
-SemaphoreHandle_t xBtnSemaphore;
+
 
 /************************************************************************/
 /* RTOS application funcs                                               */
@@ -75,6 +76,7 @@ extern void vApplicationMallocFailedHook(void) {
 /************************************************************************/
 
 void but_callback(void) {
+
 	xSemaphoreGiveFromISR(xBtnSemaphore, NULL);
 }
 
@@ -96,7 +98,7 @@ void buzzer_pulse(int pulse_duration_us) {
 
 static void task_coins(void *pvParameters) {
 	int coin_count;
-	srand(rtt_read_timer_value(RTT)); // Inicialização do rand() com seed do RTT
+	
 
 	while (1) {
 		if (xSemaphoreTake(xBtnSemaphore, portMAX_DELAY)) { // Espera o botão ser pressionado
@@ -243,6 +245,8 @@ static void configure_console(void) {
 /************************************************************************/
 /* main                                                                 */
 /************************************************************************/
+
+
 int main(void) {
 	/* Initialize the SAM system */
 	sysclk_init();
@@ -251,13 +255,17 @@ int main(void) {
 	/* Initialize the console uart */
 	configure_console();
 	
-	printf("Sistema inicializado com seed: %d\n", rtt_read_timer_value(RTT));
+	uint32_t seed = rtt_read_timer_value(RTT);
+	srand(seed);
+	printf("Meu Seed: %d\n", seed);
 	
 	btn_init();
 	buzzer_init();
 	
-	xQueueCoins = xQueueCreate(10, sizeof(int)); // Inicializa fila
-	xBtnSemaphore = xSemaphoreCreateBinary(); // Inicializa semáforo
+	//Fila
+	xQueueCoins = xQueueCreate(10, sizeof(int)); 
+	//semafaro
+	xBtnSemaphore = xSemaphoreCreateBinary(); 
 	
 	if (xTaskCreate(task_debug, "debug", TASK_OLED_STACK_SIZE, NULL,
 	TASK_OLED_STACK_PRIORITY, NULL) != pdPASS) 
