@@ -14,10 +14,18 @@
 /* IOS                                                                  */
 /************************************************************************/
 
+#define NOTE_B5 988
+#define NOTE_E6 1319
+
 #define BTN_PIO PIOA
 #define BTN_PIO_ID ID_PIOA
 #define BTN_PIO_PIN 11
 #define BTN_PIO_PIN_MASK (1 << BTN_PIO_PIN)
+
+#define BUZZER_PIO			PIOA
+#define BUZZER_PIO_ID		ID_PIOA
+#define BUZZER_PIO_IDX		27
+#define BUZZER_PIO_IDX_MASK	(1 << BUZZER_PIO_IDX)
 
 
 
@@ -25,13 +33,17 @@
 /* prototypes and types                                                 */
 /************************************************************************/
 
+int generate_random_coins(void);
 void btn_init(void);
 void RTT_init(float freqPrescale, uint32_t IrqNPulses, uint32_t rttIRQSource);
+void play_coins(int coin_count);
 
 /************************************************************************/
 /* rtos vars                                                            */
 /************************************************************************/
 
+QueueHandle_t xQueueCoins;
+SemaphoreHandle_t xBtnSemaphore;
 
 /************************************************************************/
 /* RTOS application funcs                                               */
@@ -63,25 +75,82 @@ extern void vApplicationMallocFailedHook(void) {
 /************************************************************************/
 
 void but_callback(void) {
-
+	xSemaphoreGiveFromISR(xBtnSemaphore, NULL);
 }
+
+/* buzzer control */
+void buzzer_pulse(int pulse_duration_us) {
+	int half_duration_us = pulse_duration_us / 2;
+
+	pio_clear(BUZZER_PIO, BUZZER_PIO_IDX_MASK);
+	delay_us(half_duration_us);
+	pio_set(BUZZER_PIO, BUZZER_PIO_IDX_MASK);
+	delay_us(half_duration_us);
+}
+
 
 
 /************************************************************************/
 /* TASKS                                                                */
 /************************************************************************/
 
+static void task_coins(void *pvParameters) {
+	int coin_count;
+	srand(rtt_read_timer_value(RTT)); // Inicialização do rand() com seed do RTT
+
+	while (1) {
+		if (xSemaphoreTake(xBtnSemaphore, portMAX_DELAY)) { // Espera o botão ser pressionado
+			coin_count = generate_random_coins(); // Gera um valor aleatório entre 1 e 3
+			xQueueSend(xQueueCoins, &coin_count, portMAX_DELAY); // Envia valor para a fila
+			printf("Coins: %d\n", coin_count);
+		}
+	}
+}
+
+int generate_random_coins() {
+	// Gera um número aleatório no intervalo [1, 3]
+	return (rand() % 3) + 1;
+}
+
+
+
+void play_tone(int freq, int duration) {
+	int pulse_duration_us = 1000000 / freq;
+	int half_period_us = pulse_duration_us / 2;
+
+	int num_periods = duration * 1000 / pulse_duration_us;
+
+	for (int i = 0; i < num_periods; i++) {
+		buzzer_pulse(half_period_us);
+	}
+}
+
+static void task_play(void *pvParameters) {
+	int coins_to_play;
+	while (1) {
+		if (xQueueReceive(xQueueCoins, &coins_to_play, portMAX_DELAY)) {
+			play_coins(coins_to_play);
+		}
+	}
+}
+
+void play_coins(int coin_count) {
+	for (int i = 0; i < coin_count; i++) {
+		play_tone(NOTE_B5, 80);
+		play_tone(NOTE_E6, 640);
+		vTaskDelay(100);
+	}
+}
+
 
 static void task_debug(void *pvParameters) {
 	gfx_mono_ssd1306_init();
 
 	for (;;) {
-		 int coins = (rand() % 3) + 1; // Gera um valor aleatório entre 1 e 3
-		 printf("Coins: %d\n", coins);
-
-		 // Realize as ações com base no valor de "coins"
-
-		 vTaskDelay(1000); // Espere um segundo antes de gerar outra moeda
+		gfx_mono_draw_filled_circle(10,10,4,1,GFX_WHOLE);
+		vTaskDelay(150);
+		gfx_mono_draw_filled_circle(10,10,4,0,GFX_WHOLE);
+		vTaskDelay(150);
 
 	}
 }
@@ -118,6 +187,13 @@ void btn_init(void) {
 	// com prioridade 4 (quanto mais próximo de 0 maior)
 	NVIC_EnableIRQ(BTN_PIO_ID);
 	NVIC_SetPriority(BTN_PIO_ID, 4); // Prioridade 4
+}
+
+void buzzer_init(void) {
+	// Ativa o PIO na qual o BUZZER está conectado
+	pmc_enable_periph_clk(BUZZER_PIO_ID);
+	// Configura o PIO para controlar o BUZZER como saída
+	pio_set_output(BUZZER_PIO, BUZZER_PIO_IDX_MASK, 0, 0, 0);
 }
 
 
@@ -175,10 +251,31 @@ int main(void) {
 	/* Initialize the console uart */
 	configure_console();
 	
+	printf("Sistema inicializado com seed: %d\n", rtt_read_timer_value(RTT));
+	
+	btn_init();
+	buzzer_init();
+	
+	xQueueCoins = xQueueCreate(10, sizeof(int)); // Inicializa fila
+	xBtnSemaphore = xSemaphoreCreateBinary(); // Inicializa semáforo
+	
 	if (xTaskCreate(task_debug, "debug", TASK_OLED_STACK_SIZE, NULL,
-	TASK_OLED_STACK_PRIORITY, NULL) != pdPASS) {
+	TASK_OLED_STACK_PRIORITY, NULL) != pdPASS) 
+	{
 		printf("Failed to create debug task\r\n");
 	}
+
+	if (xTaskCreate(task_coins, "task_coins", 1024, NULL, tskIDLE_PRIORITY, NULL) != pdPASS) 
+	{
+		printf("Failed to create task_coins\r\n");
+	}
+
+	if (xTaskCreate(task_play, "task_play", 1024, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) 
+	{
+		printf("Failed to create task_play\r\n");
+	}
+	
+
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
