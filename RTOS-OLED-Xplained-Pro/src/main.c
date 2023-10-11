@@ -76,10 +76,12 @@ static void task_debug(void *pvParameters) {
 	gfx_mono_ssd1306_init();
 
 	for (;;) {
-		gfx_mono_draw_filled_circle(10,10,4,1,GFX_WHOLE);
-		vTaskDelay(150);
-		gfx_mono_draw_filled_circle(10,10,4,0,GFX_WHOLE);
-		vTaskDelay(150);
+		 int coins = (rand() % 3) + 1; // Gera um valor aleatório entre 1 e 3
+		 printf("Coins: %d\n", coins);
+
+		 // Realize as ações com base no valor de "coins"
+
+		 vTaskDelay(1000); // Espere um segundo antes de gerar outra moeda
 
 	}
 }
